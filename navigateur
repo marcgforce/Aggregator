@@ -1,0 +1,577 @@
+#include <ButtonConstants.au3>
+#include <ComboConstants.au3>
+#include <GUIConstantsEx.au3>
+#include <WindowsConstants.au3>
+#include <StaticConstants.au3>
+#include <MsgBoxConstants.au3>
+#include <file.au3>
+#include <Misc.au3>
+#include <WinAPI.au3>
+
+global $flag, $flagbutton, $flagbouton, $fichier_icones = @ScriptDir & "\navicones.dll"
+$Size = 40
+Dim $array[30] [12]
+#Region ### START Koda GUI section ### Form=
+;Opt("GUICoordMode", 2)
+
+$fileini = @ScriptDir & "\confnaviv4.ini" ; déclaration du fichier ini
+$version="V4.3" ; version du programme
+
+;if not FileExists($fichier_icones) Then
+        ;msgbox(64," Navigateur " & $version,"Fichier Naviconnes.dll manquant")
+        ;Exit
+;EndIf
+;-------------------------  recherche d'un fichier de lien
+$search = FileFindFirstFile(@ScriptDir & "\*.link")
+if $search = -1 Then ; si aucun lien on va demander à créer une liste
+        $nomfichier = InputBox("Navigateur " & $version, "Veuillez donner un nom à votre première liste" & @CRLF & "Exemple : 'Mes raccourcis' ")
+        if $nomfichier="" then
+                msgbox(0,"Navigateur " & $version, "Merci de n'avoir pas utilisé ce programme :-)")
+                exit
+        EndIf
+        $filelink = @ScriptDir & "\" & $nomfichier & ".link"
+
+        for $i = 1 to 16
+                IniWriteSection($filelink,"bouton" & $i,"label=Libre" & @CRLF & "link=" & @CRLF & "icone=")
+        Next
+Else
+                $filelink= @ScriptDir & "\" & FileFindNextFile($search)
+EndIf
+Global $arraylink=_FileListToArray(@ScriptDir & "\","*.link"); recherche de tous les fichiers de liens pour alimenter le combo
+
+if not FileExists($fileini) Then ;  si le fichier ini n'existe pas on le crée
+    filewrite(".\confnaviv4.ini","Fichier de configuration du navigateur " & $version & " - Marc graziani")
+        IniWriteSection($fileini,"option","couleur=0x52B5A9")
+        FileClose($fileini)
+EndIf
+$search = FileFindFirstFile(@ScriptDir & "\navicones.dll")
+if $search = -1 Then
+  SplashTextOn("Navigateur " & $version,"Installation de Navicones.dll")   
+  FileInstall(".\navicones.dll", @ScriptDir & "\navicones.dll",1);Votre chemin vers le fichier dll
+  SplashOff()
+EndIf
+;----------------------------initialisation des boutons de raccourcis
+ $label_bouton1=IniRead($filelink,"bouton1","label","")
+ $label_bouton2=IniRead($filelink,"bouton2","label","")
+ $label_bouton3=IniRead($filelink,"bouton3","label","")
+ $label_bouton4=IniRead($filelink,"bouton4","label","")
+ $label_bouton5=IniRead($filelink,"bouton5","label","")
+ $label_bouton6=IniRead($filelink,"bouton6","label","")
+ $label_bouton7=IniRead($filelink,"bouton7","label","")
+ $label_bouton8=IniRead($filelink,"bouton8","label","")
+ $label_bouton9=IniRead($filelink,"bouton9","label","")
+ $label_bouton10=IniRead($filelink,"bouton10","label","")
+ $label_bouton11=IniRead($filelink,"bouton11","label","")
+ $label_bouton12=IniRead($filelink,"bouton12","label","")
+ $label_bouton13=IniRead($filelink,"bouton13","label","")
+ $label_bouton14=IniRead($filelink,"bouton14","label","")
+ $label_bouton15=IniRead($filelink,"bouton15","label","")
+ $label_bouton16=IniRead($filelink,"bouton16","label","")
+
+Opt("GUIOnEventMode", 1)
+
+;------------------------------------GUI  PRINCIPALE--------------------------------------
+$Form1 = GUICreate("Navigateur " & $version, 448, 609, 192, 124)
+GUISetBkColor(IniRead($fileini,"option","couleur","0x52B5A9"))
+;-----------------------------------BOUTONS PRICIPAUX---------------------------------
+$button1= GUICtrlCreateButton("", 24, 80, 145, 41,BitOR($BS_DEFPUSHBUTTON, $BS_ICON))
+GUICtrlSetOnEvent(-1, "link_pressed")
+$button2 = GUICtrlCreateButton("", 24, 140, 145, 41,BitOR($BS_DEFPUSHBUTTON, $BS_ICON))
+GUICtrlSetOnEvent(-1, "link_pressed")
+$button3 = GUICtrlCreateButton("", 24, 200, 145, 41,BitOR($BS_DEFPUSHBUTTON, $BS_ICON))
+GUICtrlSetOnEvent(-1, "link_pressed")
+$button4 = GUICtrlCreateButton("", 24, 260, 145, 41,BitOR($BS_DEFPUSHBUTTON, $BS_ICON))
+GUICtrlSetOnEvent(-1, "link_pressed")
+$button5 = GUICtrlCreateButton("", 24, 320, 145, 41,BitOR($BS_DEFPUSHBUTTON, $BS_ICON))
+GUICtrlSetOnEvent(-1, "link_pressed")
+$button6 = GUICtrlCreateButton("", 24, 380, 145, 41,BitOR($BS_DEFPUSHBUTTON, $BS_ICON))
+GUICtrlSetOnEvent(-1, "link_pressed")
+$button7 = GUICtrlCreateButton("", 24, 440, 145, 41,BitOR($BS_DEFPUSHBUTTON, $BS_ICON))
+GUICtrlSetOnEvent(-1, "link_pressed")
+$button8 = GUICtrlCreateButton("", 24, 500, 145, 41,BitOR($BS_DEFPUSHBUTTON, $BS_ICON))
+GUICtrlSetOnEvent(-1, "link_pressed")
+$button9= GUICtrlCreateButton("", 254, 80, 145, 41,BitOR($BS_DEFPUSHBUTTON, $BS_ICON))
+GUICtrlSetOnEvent(-1, "link_pressed")
+$button10 = GUICtrlCreateButton("", 254, 140, 145, 41,BitOR($BS_DEFPUSHBUTTON, $BS_ICON))
+GUICtrlSetOnEvent(-1, "link_pressed")
+$button11 = GUICtrlCreateButton("", 254, 200, 145, 41,BitOR($BS_DEFPUSHBUTTON, $BS_ICON))
+GUICtrlSetOnEvent(-1, "link_pressed")
+$button12 = GUICtrlCreateButton("", 254, 260, 145, 41,BitOR($BS_DEFPUSHBUTTON, $BS_ICON))
+GUICtrlSetOnEvent(-1, "link_pressed")
+$button13= GUICtrlCreateButton("", 254, 320, 145, 41,BitOR($BS_DEFPUSHBUTTON, $BS_ICON))
+GUICtrlSetOnEvent(-1, "link_pressed")
+$Button14 = GUICtrlCreateButton("", 254, 380, 145, 41,BitOR($BS_DEFPUSHBUTTON, $BS_ICON))
+GUICtrlSetOnEvent(-1, "link_pressed")
+$button15= GUICtrlCreateButton("", 254, 440, 145, 41,BitOR($BS_DEFPUSHBUTTON, $BS_ICON))
+GUICtrlSetOnEvent(-1, "link_pressed")
+$button16= GUICtrlCreateButton("", 254, 500, 145, 41,BitOR($BS_DEFPUSHBUTTON, $BS_ICON))
+GUICtrlSetOnEvent(-1, "link_pressed")
+ ;-------------------------------------------BOUTONS DE RESET DE LIENS-------------------------------------
+$buttonR1= GUICtrlCreateButton("... ", 168, 80, 17, 41)
+GUICtrlSetOnEvent(-1, "reset_pressed")
+$buttonR2 = GUICtrlCreateButton("...", 169, 140, 17, 41)
+GUICtrlSetOnEvent(-1, "reset_pressed")
+$buttonR3 = GUICtrlCreateButton("...", 170, 200, 17, 41)
+GUICtrlSetOnEvent(-1, "reset_pressed")
+$buttonR4 = GUICtrlCreateButton("...", 170, 260, 17, 41)
+GUICtrlSetOnEvent(-1, "reset_pressed")
+$buttonR5 = GUICtrlCreateButton("...", 170, 320, 17, 41)
+GUICtrlSetOnEvent(-1, "reset_pressed")
+$buttonR6 = GUICtrlCreateButton("...", 170, 380, 17, 41)
+GUICtrlSetOnEvent(-1, "reset_pressed")
+$buttonR7 = GUICtrlCreateButton("...", 170, 440, 17, 41)
+GUICtrlSetOnEvent(-1, "reset_pressed")
+$buttonR8 = GUICtrlCreateButton("...", 170, 500, 17, 41)
+GUICtrlSetOnEvent(-1, "reset_pressed")
+$buttonR9= GUICtrlCreateButton("...", 398, 80, 17, 41)
+GUICtrlSetOnEvent(-1, "reset_pressed")
+$buttonR10 = GUICtrlCreateButton("...", 399, 140, 17, 41)
+GUICtrlSetOnEvent(-1, "reset_pressed")
+$buttonR11 = GUICtrlCreateButton("...", 400, 200, 17, 41)
+GUICtrlSetOnEvent(-1, "reset_pressed")
+$buttonR12 = GUICtrlCreateButton("...", 400, 260, 17, 41)
+GUICtrlSetOnEvent(-1, "reset_pressed")
+$buttonR13= GUICtrlCreateButton("...", 400, 320, 17, 41)
+GUICtrlSetOnEvent(-1, "reset_pressed")
+$buttonR14 = GUICtrlCreateButton("...", 400, 380, 17, 41)
+GUICtrlSetOnEvent(-1, "reset_pressed")
+$buttonR15= GUICtrlCreateButton("...", 400, 440, 17, 41)
+GUICtrlSetOnEvent(-1, "reset_pressed")
+$buttonR16 = GUICtrlCreateButton("...", 400, 500, 17, 41) ; ctrlid 33
+GUICtrlSetOnEvent(-1, "reset_pressed")
+;----------------------------LABELS SOUS LE BOUTON------------------------------
+$label1 =GUICtrlCreateLabel($label_bouton1 ,24,120,160,20,$SS_CENTER)
+$label2 =GUICtrlCreateLabel($label_bouton2,24,180,160,20,$SS_CENTER)
+$label3 =GUICtrlCreateLabel($label_bouton3,24,240,160,20,$SS_CENTER)
+$label4 =GUICtrlCreateLabel($label_bouton4,24,300,160,20,$SS_CENTER)
+$label5 =GUICtrlCreateLabel($label_bouton5,24,360,160,20,$SS_CENTER)
+$label6 =GUICtrlCreateLabel($label_bouton6,24,420,160,20,$SS_CENTER)
+$label7 =GUICtrlCreateLabel($label_bouton7,24,480,160,20,$SS_CENTER)
+$label8 =GUICtrlCreateLabel($label_bouton8,24,540,160,20,$SS_CENTER)
+$label9 =GUICtrlCreateLabel($label_bouton9,254,120,160,20,$SS_CENTER)
+$label10 =GUICtrlCreateLabel($label_bouton10,254,180,160,20,$SS_CENTER)
+$label11 =GUICtrlCreateLabel($label_bouton11,254,240,160,20,$SS_CENTER)
+$label12 =GUICtrlCreateLabel($label_bouton12,254,300,160,20,$SS_CENTER)
+$label13 =GUICtrlCreateLabel($label_bouton13,254,360,160,20,$SS_CENTER)
+$label14 =GUICtrlCreateLabel($label_bouton14,254,420,160,20,$SS_CENTER)
+$label15 =GUICtrlCreateLabel($label_bouton15,254,480,160,20,$SS_CENTER)
+$label16 =GUICtrlCreateLabel($label_bouton16,254,540,160,20,$SS_CENTER)
+;-----------------------------ICONES DE BOUTONS--------------------------------------
+$icon_button1 = GUICtrlSetImage($button1 ,"shell32.dll",50)
+$icon_button2= GUICtrlSetImage($button2,"shell32.dll",50)
+$icon_button3= GUICtrlSetImage($button3,"shell32.dll",50)
+$icon_button4= GUICtrlSetImage($button4,"shell32.dll",50)
+$icon_button5= GUICtrlSetImage($button5,"shell32.dll",50)
+$icon_button6= GUICtrlSetImage($button6,"shell32.dll",50)
+$icon_button7= GUICtrlSetImage($button7,"shell32.dll",50)
+$icon_button8= GUICtrlSetImage($button8,"shell32.dll",50)
+$icon_button9= GUICtrlSetImage($button9,"shell32.dll",50)
+$icon_button10= GUICtrlSetImage($button10,"shell32.dll",50)
+$icon_button11= GUICtrlSetImage($button11,"shell32.dll",50)
+$icon_button12= GUICtrlSetImage($button12,"shell32.dll",50)
+$icon_button13= GUICtrlSetImage($button13,"shell32.dll",50)
+$icon_button14= GUICtrlSetImage($Button14,"shell32.dll",50)
+$icon_button15= GUICtrlSetImage($button15,"shell32.dll",50)
+$icon_button16= GUICtrlSetImage($button16,"shell32.dll",50)
+
+$Combo1 = GUICtrlCreateCombo( "Selectionnez une liste de raccourcis", 64, 40, 233, 30, BitOR($CBS_DROPDOWN,$CBS_AUTOHSCROLL))
+ GUICtrlSetOnEvent(-1, "charger_combo")
+$Button33 = GUICtrlCreateButton("-", 320, 40, 30, 30,$BS_ICON)
+GUICtrlSetOnEvent(-1, "_suppression")
+$Button34 = GUICtrlCreateButton("+", 360, 40, 30, 30,$BS_ICON)
+GUICtrlSetOnEvent(-1, "_ajouter")
+
+$MenuItem1 = GUICtrlCreateMenu("&Menu")
+$MenuItem3 = GUICtrlCreateMenuItem("Ajouter Liste", $MenuItem1)
+GUICtrlSetOnEvent(-1, "_ajouter")
+$MenuItem4 = GUICtrlCreateMenuItem("Supprimer Liste", $MenuItem1)
+GUICtrlSetOnEvent(-1, "_suppression")
+$MenuItem2 = GUICtrlCreateMenuitem("&Couleur", $MenuItem1)
+GUICtrlSetOnEvent(-1, "changer_couleur")
+$MenuItem5 = GUICtrlCreateMenu("A&ide")
+$MenuItem6 = GUICtrlCreateMenuItem("A &propos", $MenuItem5)
+GUICtrlSetOnEvent(-1, "apropos")
+
+GUISetOnEvent($GUI_EVENT_CLOSE, "SpecialEvents")
+ ;------------------------------------GUI  PRINCIPALE--------------------------------------
+
+ ;----------------------------GUI QUESTION----------------------------------------------
+ $gui_question = GUICreate("NAVIGATEUR "& $version & " Création du lien" , 345, 244, 192, 125)
+$checkbox_internet = GUICtrlCreateCheckbox("Lien Internet", 10, 22, 120, 40)
+GUICtrlSetOnEvent(-1, "check_internet")
+$checkbox_Fichier= GUICtrlCreateCheckbox("Lien vers fichier", 10, 62, 120, 40)
+GUICtrlSetOnEvent(-1, "check_fichier")
+$checkbox_dossier= GUICtrlCreateCheckbox("Lien vers dossier",10, 102, 120, 40)
+GUICtrlSetOnEvent(-1, "check_dossier")
+$checkbox_nothing=GUICtrlCreateCheckbox("Supprimer lien",  10, 142, 120, 40)
+GUICtrlSetOnEvent(-1, "check_nothing")
+$btn1 = GUICtrlCreateButton("Valider", 240, 196, 80, 25)
+GUICtrlSetOnEvent(-1, "valider_guiquestion")
+$Checkbox_couleur = GUICtrlCreateCheckbox("Changer icone", 10, 186, 192, 40)
+GUICtrlSetOnEvent(-1, "check_icone")
+guictrlcreatelabel("Ajout, Suppression ou Modification d'un raccourcis...",10, 5, 4, 4)
+
+;-------------------------------- GUI ICONE-------------------------------------------------
+$GuiIcon = GuiCreate('Sélection icone',1201,555)
+$IconButton = GUICtrlCreateButton("", 216, 496, 81, 41,$BS_ICON)
+$validerbouton = GUICtrlCreateButton("valider", 916, 496, 81, 41)
+GUICtrlSetOnEvent(-1,"validericone")
+For $y = 0 to 11
+    For $x = 0 To 29
+        $Icon = ($y*30)+$x
+        If $Icon > 372 then $Icon = -1
+        $array[$x][$y] = GuiCtrlCreateButton($Icon ,($x*$Size) ,($y*$Size) ,$Size ,$Size,$BS_ICON)
+                GUIctrlSetOnEvent(-1, "clicicone")
+            GUICtrlSetImage ($array[$x][$y], $fichier_icones, $Icon)
+        Next
+Next
+
+GUISwitch($Form1)
+refresh_combo()
+GUISetState(@SW_SHOW)
+;-------------------------------- GUI ICONE-------------------------------------------------
+
+GUIRegisterMsg($WM_COMMAND, "_labelModify") ; enregistrement de la fonction idoine
+
+;---------------------------------------FONCTIONS------------------------------------
+Func _labelModify($hWnd, $iMsg, $wParam, $lParam); Permet de modifier le label d'un bouton sans le refaire
+    Local $DbClick = BitAND($wParam, 0x00010000); double clic
+        local $_id =  BitAND($wParam, 0x0000FFFF); control id de l'objet selectionné
+    If($DbClick) and $_id > 34 and $_id <51  and GUICtrlRead($_id) <> "Libre" then ; les labels ont un ID entre 35 et 50 (voulu dans le dévelloppement)
+        ;ConsoleWrite("Double Clic !" & " ID = " & $_id & " " & GUICtrlRead($_id)  &   @CRLF)
+                $input_label = InputBox("Navigateur " & $version & " - Modification Label","Veuillez entrer le nouveau label pour ce bouton :" & @CRLF & @CRLF & _
+                                                                   "Nota Benne : Changer le label ne modifiera pas le lien du bouton", GUICtrlRead($_id))
+                if @error <> 0 then
+                        Return
+                else
+                        $label_section = "bouton" & $_id - 34; pour modifier le fichier ini (l'id des boutons va de 1 à 16)
+                        iniwrite($filelink, $label_section,"label", $input_label)
+                        charger_combo()
+                EndIf
+    EndIf
+EndFunc
+
+func refresh_combo() ;Permet de rafraichir les données de la liste en cas de nouvelle liste
+        For $i=1 To Ubound($arraylink)-1
+                $name=stringsplit($arraylink[$i],".")
+        ;_ArrayDisplay($name)
+                GUICtrlSetData($Combo1,$name[1])
+        Next
+        GUICtrlSetData($Combo1,$name[1],$name[1]); affichage de la liste dans le combo
+        charger_combo(); lecture de la liste à l'ouverture
+EndFunc
+
+func validericone() ;fonction de la gui icones, valide la selection
+        IniWrite($filelink,$flagbouton,"icone", $fichier_icones &"," & $Icon)
+        charger_combo()
+        GUISetState(@SW_HIDE,$GuiIcon)
+        GUISwitch($Form1)
+EndFunc
+
+func clicicone() ; fonction de la gui icones, permet de selectionner une icone
+       	global $Icon = GUICtrlRead(@GUI_CtrlId)
+		$image = GUICtrlSetImage($IconButton, $fichier_icones, $Icon)
+EndFunc
+
+Func changer_couleur(); permet de changer de couleur la gui principale
+        $couleur = couleur()
+        if $couleur ="annule" then
+                $couleur = IniRead($fileini,"option","couleur", $couleur)
+        Else
+                GUICtrlSetData($Form1,GUISetBkColor($couleur))
+                IniWrite($fileini,"option","couleur", $couleur)
+        EndIf
+EndFunc
+
+func apropos()
+        Msgbox(4096,"A propos...","Navigateur "& "version : " & $version & @CRLF & "Concept & develloppement : Marc GRAZIANI")
+EndFunc
+
+Func _ajouter(); permet d'ajouter de listes dans le programme
+        $nomfichier = InputBox("Navigateur " & $version, "Veuillez donner un nom  à cette liste" & @CRLF & "Exemple : 'Raccourcis ministère' ")
+        if @error <> 0 or $nomfichier = "" then Return
+        if _CheckForbidden($nomfichier) <> 0 Then ; si le nom de fichier contient des caractères interdits
+                msgbox (64,"Navigateur " & $version, "Erreur, le nom comporte des caractères interdits :"& @CRLF & '["/\\*?<>|:]')
+                Return
+        EndIf
+         $filelink = @ScriptDir & "\" & $nomfichier & ".link"
+                if FileFindFirstFile($filelink) <> -1 Then ; test si le fichier existe, si - 1 rien est trouvé
+                        local $messagefile = msgbox(4,"Navigateur " & $version, "Un fichier portant le même nom existe déjà " & @CRLF & " Voulez vous l'ecraser ?")
+                        if $messagefile = 6  Then
+                                ecrireFichier($filelink)
+                                MsgBox(64,"Navigateur " & $version, "La liste : " & $nomfichier & " a été ajoutée")
+                        Else
+                                Return
+                        EndIf
+                Else
+                ecrireFichier($filelink)
+                MsgBox(64,"Navigateur " & $version, "La liste : " & $nomfichier & " a été ajoutée")
+        EndIf
+EndFunc
+
+func ecrireFichier($nomfichier) ; ecriture du fichier .link vide
+        for $i = 1 to 16
+                IniWriteSection($nomfichier,"bouton" & $i,"label=Libre" & @crlf & "link=" & @CRLF & "icone=")
+        Next
+        GUICtrlSetData($combo1,"")
+        $arraylink=""
+        $arraylink=_FileListToArray(@ScriptDir & "\","*.link")
+        refresh_combo()
+EndFunc
+
+Func _CheckForbidden($string) ; vérification qu'une string ne contienne pas des caractères interdits
+  Local $pattern_forbid = '["/\\*?<>|:]'
+  Return  StringRegExp($string, $pattern_forbid)
+EndFunc
+
+func _suppression() ; Permet de supprimer une liste
+        $linktosupress = GUICtrlRead($combo1)
+        if $linktosupress == "Selectionnez une liste de raccourcis" then
+                MsgBox(64,"Navigateur " & $version, "Vous ne pouvez pas supprimer cet item")
+        Else
+                $file2supress = @scriptdir & "\" & $linktosupress & ".link"
+                $message = msgbox(1, "Navigateur " & $version, "Etes vous sur de vouloir supprimer la  liste : " & @CRLF & $linktosupress )
+                if $message = $IDOK Then
+                        FileDelete($file2supress)
+                        GUICtrlSetData($combo1,"")
+                        $arraylink=""
+                        $arraylink=_FileListToArray(@ScriptDir & "\","*.link")
+                        refresh_combo()
+                        MsgBox(64,"Navigateur " & $version, "La liste : " & $linktosupress & " a été supprimée")
+                        charger_combo()
+                EndIf
+        EndIf
+EndFunc
+
+
+func charger_combo(); permet d'afficher les items d'une liste lors d'une selection ou d'un changement de dans la liste
+        $comboread=GUICtrlRead($combo1)
+        $filelink= @scriptdir & "\" & $comboread & ".link"
+        for $i = 1 to 16
+                $link = iniRead($filelink,"bouton" & $i, "label","erreur")
+                $tip = iniRead($filelink,"bouton" & $i, "link","erreur")
+                $link_icon = stringsplit(IniRead($filelink,"bouton" & $i,"icone","shell32.dll,132"),",")
+				;_arraydisplay($link_icon)
+                GUICtrlSetData($i+34,$link)
+                afficheicone($link_icon,$i)
+                guictrlsettip($i + 2, $tip) ; infobulle affichant le lien au passage sur le bouton
+        Next
+EndFunc
+
+func  afficheicone($link, $button) ; affiche l'icone du bouton
+        if $link[0] > 1 Then
+                local $image = GUICtrlSetImage($button + 2, $link[1],$link[2])
+				;msgbox(0,"",$image,2)
+        Else
+                GUICtrlSetImage($button +2,"shell32.dll",23) ; en cas de probleme un se rabat vers shell32.dll
+        EndIf
+EndFunc
+
+Func SpecialEvents(); quitte
+        Exit
+EndFunc
+
+func uncheckall() ; permet de deselectionner tous les items de la gui_question
+        GUICtrlSetState($checkbox_Fichier,$GUI_UNCHECKED)
+        GUICtrlSetState($checkbox_internet,$GUI_UNCHECKED)
+        GUICtrlSetState($checkbox_nothing,$GUI_UNCHECKED)
+        GUICtrlSetState($Checkbox_couleur,$GUI_UNCHECKED)
+        GUICtrlSetState($checkbox_dossier,$GUI_UNCHECKED)
+EndFunc
+
+func valider_guiquestion(); permet de valider la selection de la gui_question
+        if $flag ="iconbutton" then
+                iconbutton()
+                GUISetState(@SW_HIDE, $gui_question)
+                GUISwitch($Form1)
+        Else
+                GUISetState(@SW_HIDE, $gui_question)
+                GUISwitch($Form1)
+                Faislien($flagbutton, $flagbouton, $flag)
+        EndIf
+EndFunc
+
+func reset_pressed() ; correspond au bouton situé a sa doite qui permet de refaire un lien
+        $flagbutton=@GUI_CtrlId-18; Correspondance avec la variable du bouton
+        ;ConsoleWrite($flagbutton & " | ")
+        $flagbouton="bouton" & $flagbutton
+        uncheckall()
+        GUISwitch($gui_question)
+        GUISetState(@SW_SHOW, $gui_question)
+        GUISetOnEvent($GUI_EVENT_CLOSE, "LinkCreateEvents")
+EndFunc
+
+func libre_pressed() ; permet de créer un lien lors du clic sur le bouton libre
+        $flagbutton=@GUI_CtrlId -2  ;Correspondance avec la variable du bouton
+        ;ConsoleWrite($flagbutton & " | ")
+        $flagbouton="bouton"& $flagbutton
+        uncheckall(); deselectionne toutes les checkbox
+        GUISwitch($gui_question)
+        GUISetState(@SW_SHOW, $gui_question)
+        GUISetOnEvent($GUI_EVENT_CLOSE, "LinkCreateEvents")
+EndFunc
+
+Func link_pressed() ; clic sur un des bouton principaux (avec icone), si le bouton est libre, renvoi vers la fonction libre_pressed
+        $flagbutton=@GUI_CtrlId-2  ; Correspondance avec la variable du bouton
+        $flagbouton="bouton"& $flagbutton
+        exec($flagbutton,$flagbouton)
+EndFunc
+
+func iconbutton() ; affiche la gui qui permet de selectionner une icone
+        GUISwitch($GuiIcon)
+        GUISetState(@SW_SHOW, $GuiIcon)
+        GUISetOnEvent($GUI_EVENT_CLOSE, "close_iconset")
+EndFunc
+
+
+func LinkCreateEvents()
+        GUISetState(@SW_HIDE, $gui_question)
+        GUISwitch($Form1)
+EndFunc
+
+func close_iconset() ; fermeture de la gui de selection d'une icone
+        GUISetState(@SW_HIDE, $GuiIcon)
+        GUISwitch($Form1)
+EndFunc
+
+Func _IsChecked($control) ;Fonction pour voir si la checkbox est cochée
+    Return BitAnd(GUICtrlRead($control),$GUI_CHECKED) = $GUI_CHECKED
+EndFunc
+
+;-----------------------------------------------------------------------
+; fonctions qui permettent de n'avoir qu'une seule case cochée à la fois
+;-----------------------------------------------------------------------
+
+Func check_dossier()
+        GUICtrlSetState($checkbox_Fichier,$GUI_UNCHECKED)
+        GUICtrlSetState($checkbox_internet,$GUI_UNCHECKED)
+        GUICtrlSetState($checkbox_nothing,$GUI_UNCHECKED)
+        GUICtrlSetState($Checkbox_couleur,$GUI_UNCHECKED)
+        $flag= "dossier"
+EndFunc
+
+func check_fichier()
+        GUICtrlSetState($checkbox_dossier,$GUI_UNCHECKED)
+        GUICtrlSetState($checkbox_internet,$GUI_UNCHECKED)
+        GUICtrlSetState($checkbox_nothing,$GUI_UNCHECKED)
+        GUICtrlSetState($Checkbox_couleur,$GUI_UNCHECKED)
+        $flag="fichier"
+EndFunc
+
+func check_internet()
+        GUICtrlSetState($checkbox_Fichier,$GUI_UNCHECKED)
+        GUICtrlSetState($checkbox_dossier,$GUI_UNCHECKED)
+        GUICtrlSetState($checkbox_nothing,$GUI_UNCHECKED)
+        GUICtrlSetState($Checkbox_couleur,$GUI_UNCHECKED)
+        $flag="internet"
+EndFunc
+
+func check_nothing()
+        GUICtrlSetState($checkbox_Fichier,$GUI_UNCHECKED)
+        GUICtrlSetState($checkbox_internet,$GUI_UNCHECKED)
+        GUICtrlSetState($checkbox_dossier,$GUI_UNCHECKED)
+        GUICtrlSetState($Checkbox_couleur,$GUI_UNCHECKED)
+        $flag="Suppression"
+EndFunc
+
+func check_icone()
+        GUICtrlSetState($checkbox_Fichier,$GUI_UNCHECKED)
+        GUICtrlSetState($checkbox_internet,$GUI_UNCHECKED)
+        GUICtrlSetState($checkbox_dossier,$GUI_UNCHECKED)
+        GUICtrlSetState($checkbox_nothing,$GUI_UNCHECKED)
+        $flag="iconbutton"
+EndFunc
+;-----------------------------------------------------------------------
+; fonctions qui permettent de n'avoir qu'une seule case cochée à la fois
+;-----------------------------------------------------------------------
+
+Func exec($button,$section); la fonction qui permet de lancer le programme associé au bouton
+         $label_bouton=IniRead($filelink,$section,"label","")
+         ;consolewrite($button & "  - - " & $section & " -- " & $label_bouton & " - " )
+         if $label_bouton="Libre" Then
+                libre_pressed()
+         else
+            $bouton_file=IniRead($filelink,$section,"link","")
+            ShellExecute($bouton_file)
+          EndIf
+ EndFunc
+
+func Faislien($Button,$section,$lien=""); permet de créer le lien dans le fichier ini
+        if $lien= "fichier" Then
+                $choose = FileOpenDialog("Selectionner un fichier",@DesktopCommonDir ,"tous les fichiers (*.*)"); gestion de la selection du fichier
+                $nomdbx= stringsplit($choose,"\")
+                if @error <> 0 Then
+                        return  ; marche arrière ! (appui sur cancel)
+                Else
+                        $reponse = InputBox("Nom du lien","Donnez un titre au lien !",$nomdbx[UBound($nomdbx)-1]); quel label aura le raccourcis
+                        if @error = 1 Then ; (appui sur cancel)
+                                return
+                        Else
+                                iniwrite($filelink,$section,"label",$reponse); tout est ok on peut ecrire la valeur dans le fichier de config
+                                IniWrite($filelink,$section,"link", $choose); on peut ecrire le chemin du fichier dans la configuration
+								if _WinAPI_ExtractIconEx( $choose,-1,0,0,0) > 0 Then ; permet de tester si le fichier possède une ou plusiers icone(s)
+									IniWrite($filelink,$section,"icone",$choose & ",0"); si oui écriture dans le fichier
+									charger_combo()
+
+								Else
+									$flag = "iconbutton"
+									valider_guiquestion() ; sinon passage par la case gui_icones
+								EndIf
+                        EndIf
+                        $lien=""
+                EndIf
+        Elseif $lien="dossier" Then
+                $choose=FileSelectFolder("Choisissez un dossier", "c:\") ; on fais la même chose avec le dossier
+                $nomdbx= stringsplit($choose,"\")
+                if @error <> 0 Then
+                        Return
+                Else
+                        $reponse = InputBox("Nom du lien","Nommez le bouton !",$nomdbx[UBound($nomdbx)-1])
+                        if @error = 1 Then
+                                Return
+                        Else
+                                iniwrite($filelink,$section,"label",$reponse)
+                                IniWrite($filelink,$section,"link", $choose)
+                                $flag = "iconbutton"
+                                valider_guiquestion()
+                        EndIf
+                EndIf
+		ElseIf $lien="internet" Then
+                $choose = InputBox("Lien Internet","Ecrivez ou collez le lien","http://")
+                if @error <> 0 Then
+                        Return
+                Else
+                        $reponse = InputBox("Nom du lien","Nommez le bouton !","Le nom ici")
+            if @error = 1 Then
+                                Return
+                        Else
+                iniwrite($filelink,$section,"label",$reponse)
+                            IniWrite($filelink,$section,"link", $choose)
+                                $flag = "iconbutton"
+                                valider_guiquestion()
+                        EndIf
+                EndIf
+        ElseIf $lien="Suppression" Then
+                iniwrite($filelink,$section,"label","Libre")
+                IniWrite($filelink,$section,"link", "")
+                IniWrite($filelink, $section,"icone","")
+                charger_combo()
+        EndIf
+                $lien=""
+EndFunc
+
+func couleur() ; permet de choisir la couleur
+        $couleur = _ChooseColor()
+        if $couleur = -1 Then
+                return "annule"
+        Else
+                $sCr = Hex($couleur, 6)
+        Return '0x' & StringMid($sCr, 5, 2) & StringMid($sCr, 3, 2) & StringMid($sCr, 1, 2)
+        EndIf
+EndFunc
+
+
+
+While 1
+    Sleep(100) ; attente pour liberer le processeur.
+WEnd
